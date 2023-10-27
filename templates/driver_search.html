@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver Search</title>
+</head>
+<body>
+
+<h2>Search for Drivers</h2>
+
+<!-- Search Form -->
+<form action="/admin/search_drivers" method="post">
+    <label for="search_query">Enter Driver's First Name or Surname:</label>
+    <input type="text" id="search_query" name="search_query" required>
+    <input type="submit" value="Search">
+</form>
+
+<form action="/admin/search_drivers" method="post">
+    <input type="submit" name="reset" value="Reset">
+</form>
+
+
+<!-- Display Search Results -->
+{% if drivers %}
+    <h3>Search Results:</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Surname</th>
+                <th>Age</th>
+                <th>Car Model</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for driver in drivers %}
+                <tr>
+                    <td>{{ driver[0]}}</td>
+                    <td>{{ driver[1]}}</td>
+                    <td>{{ driver[2]}}</td>
+                    <td>{{ driver[3]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {% if search_submitted %}
+        <p>No drivers found for the given query.</p>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>

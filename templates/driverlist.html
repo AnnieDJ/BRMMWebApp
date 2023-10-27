@@ -1,12 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- driver_list is the variable passed in containing the list of drivers -->
-<!-- Add code to display a list of drivers -->
 
 <h2>Driver List</h2>
 
-<p>For the Milestone submission, this page just needs to display this text successfully in your browser.</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Car Model</th>
+            <th>Drive Class</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for driver in driver_list %}
+        <tr {% if driver[5] and driver[5] <= 18 %}class="table-warning"{% endif %}>
+            <!-- Make the driver name a clickable link -->
+            <td><a href="listdrivers?driverid={{driver[0]}}">{{ driver[2] }} {{ driver[1] }}</a></td>
+            <td>{{ driver[3] }}</td>
+            <td>{{ driver[4] }}</td>
+        </tr>
+    {% endfor %}
+    
 
-<p>Add the driver list here for your final submission.</p>
+    </tbody>
+</table>
 
 {% endblock %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Driver - Step 2</title>
+</head>
+<body>
+
+{% if driver_type == "junior_12_16" %}
+<h2>Add New Driver for junior:12 years old to 16 years old Step 2</h2>
+{% endif %}
+
+{% if driver_type == "junior_16_25" %}
+<h2>Add New Driver for junior:16 years old to 25 years old Step 2</h2>
+{% endif %}
+
+
+{% if driver_type == "non_junior" %}
+<h2>Add New Driver - Step 2</h2>
+{% endif %}
+
+
+
+
+<p>First Name: {{ first_name }}</p>
+<p>Surname: {{ surname }}</p>
+<p>Car: {{ car }}</p>
+
+<form action="/admin/finalize_driver" method="post">
+    <!-- Hidden inputs to pass the values to the next step -->
+    <input type="hidden" name="first_name" value="{{ first_name }}">
+    <input type="hidden" name="surname" value="{{ surname }}">
+    <input type="hidden" name="car" value="{{ car }}">
+    <input type="hidden" name="driver_type" value="{{ driver_type }}">
+
+    {% if driver_type == "junior_16_25" or driver_type == "junior_12_16" %}
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required><br><br>
+    {% endif %}
+
+    {% if driver_type == "junior_12_16" %}
+        <label for="caregiver">Select Caregiver:</label>
+        <select name="caregiver" id="caregiver">
+            <option value="">All</option>
+            {% for caregiver in caregivers %}
+                <option value="{{ caregiver[0] }}">{{ caregiver[1] }}{{ caregiver[2] }}</option>
+            {% endfor %}
+        </select><br><br>
+    {% endif %}
+
+    <input type="submit" value="Submit">
+    <a href="/admin/add_driver">Go Back</a>
+</form>
+
+
+</body>
+</html>

@@ -1,32 +1,45 @@
-
 <!DOCTYPE html>
 <html>
     <!-- access Plotly content delivery network (CDN) charting library -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <body>
-    <h1>heading</h1>
-    <div id="myHBarPlot" style="width:100%; max-width:320px;"></div>
+    <h1>Top 5 Drivers Overall</h1>
+    <div id="myHBarPlot" style="width:100%; max-width:800px;"></div>
 
     <script>
-        // Note SPACE after each fruit name so gap before horizontal bars
-        const priceList = [7.25,8.50,3.45];
-        const fruitList = ['apple ','mango ','banana '];
-        // REPLACE constants above with passed in variables.
-        // Use the '|safe' Jinja filter to mark them as safe (prevents your data being html-escaped). eg,
-        // var myList = {{ list_from_py | safe }}
+        // Replace constants with passed in variables.
+        var bestDriverList = {{ name_list | safe }}.reverse(); // Reverse the order
+        var resultsList = {{ value_list | safe }}.sort(function(a, b){return b-a}); // Sort in descending order
 
         // Define graph data
-        const data = [{ x: priceList,  y: fruitList,  type:"bar", orientation:"h", marker: {color:"pink"} }];
+        const data = [{ 
+            x: resultsList,  
+            y: bestDriverList,  
+            type:"bar", 
+            orientation:"h", 
+            marker: {color:"blue"},
+            text: resultsList, // Display the results on the bars
+            textposition: 'auto' // Position the text inside the bars
+        }];
 
-        // Define graph layout. Excluded a y-axis title as fruit names are self-explanatory.
+        // Define graph layout. Adjust the margin to make sure names are fully visible.
         const layout = {  
-            xaxis: {range: [0, 15], title: "cost"}, 
-            title: "something"
+            xaxis: {title: "Overall Result"}, 
+            yaxis: {automargin: true},
+            title: "Top 5 Drivers Overall",
+            margin: {
+                l: 150, // Adjust left margin to ensure names fit
+                r: 50,
+                b: 50,
+                t: 50,
+                pad: 4
+            }
         };
 
         // Display using Plotly
         Plotly.newPlot("myHBarPlot", data, layout);
+        
 
     </script>
 

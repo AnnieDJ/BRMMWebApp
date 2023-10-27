@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Runs</title>
+</head>
+<body>
+
+<h2>Edit Runs</h2>
+
+<!-- Filter Form -->
+<form action="/admin/edit_runs" method="post">
+    <label for="driver_id">Filter by Driver:</label>
+    <select name="driver_id" id="driver_id">
+        <option value="">All</option>
+        {% for driver in drivers %}
+            <option value="{{ driver[0] }}">{{ driver[1] }} {{ driver[2] }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="course_id">Or Filter by Course:</label>
+    <select name="course_id" id="course_id">
+        <option value="">All</option>
+        {% for course in courses %}
+            <option value="{{ course[0] }}">{{ course[1] }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="submit" value="Filter">
+    <input type="submit" value="Resets">
+</form>
+
+<!-- Display Runs -->
+{% if runs %}
+    <h3>Runs:</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Driver ID</th>
+                <th>Driver Name</th>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Run Num</th>
+                <th>Time</th>
+                <th>Cones</th>
+                <th>WD</th>
+                <th>Run Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+                <form action="/admin/update_run" method="post">
+                    <tr>
+                        <td>{{ run[0] }}</td>
+                        <td>{{ run[1] }}</td>
+                        <td>{{ run[2] }}</td>
+                        <td>{{ run[3] }}</td>
+                        <td>{{ run[4] }}</td>
+                        <td><input type="text" name="time" value="{{ run[5] }}"></td>
+                        <td>
+                            <select name="cones">
+                                {% for i in range(21) %}
+                                    <option value="{{ i }}" {% if i == run[6] %}selected{% endif %}>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="wd">
+                                <option value="0" {% if run[7] == 0 %}selected{% endif %}>0</option>
+                                <option value="1" {% if run[7] == 1 %}selected{% endif %}>1</option>
+                            </select>
+                        </td>
+                        <td>{{ run[8] }}</td>
+                        <td>
+                            <input type="hidden" name="driver_id" value="{{ run[0] }}">
+                            <input type="hidden" name="course_id" value="{{ run[2] }}">
+                            <input type="hidden" name="run_num" value="{{ run[4] }}">
+                            <input type="submit" value="Apply Edit">
+                        </td>
+                    </tr>
+                </form>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+</body>
+</html>

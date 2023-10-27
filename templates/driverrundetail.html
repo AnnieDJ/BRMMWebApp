@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Select a Driver</h2>
+
+<form action="/driverrundetail" method="post"> <!-- Replace '/your_target_route' with the route where you want to send the selected driver's information -->
+    <label for="driver">Choose a driver:</label>
+    <select name="driver" id="driver">
+        {% for driver in drivers_list %}
+            <option value="{{ driver[0] }}">{{ driver[1] }} {{ driver[2] }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Submit">
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Driver ID</th>
+            <th>Driver Name</th>
+            <th>Course Name</th>
+            <th>Run Num</th>
+            <th>Time</th>
+            <th>Cones</th>
+            <th>WD</th>
+            <th>Run Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for driver in driverdetail %}
+            <tr>
+                <td>{{ driver[0]}}</td>
+                <td>{{ driver[1] }}</td>
+                <td>{{ driver[2] }}</td>
+                <td>{{ driver[3] }}</td>
+                <td>{{ driver[4] }}</td>
+                <td>{{ driver[5] }}</td>
+                <td>{{ driver[6] }}</td>
+                <td>{{ driver[7] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}

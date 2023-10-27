@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Driver - Step 1</title>
+</head>
+<body>
+
+<h2>Add New Driver - Step 1</h2>
+
+<form action="/admin/add_driver" method="post">
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required><br><br>
+
+    <label for="surname">Surname:</label>
+    <input type="text" id="surname" name="surname" required><br><br>
+
+    <label for="car_num">Assign to Car:</label>
+    <select name="car_num" id="car_num" required>
+        <option value="">All</option>
+        {% for car in cars %}
+            <option value="{{ car[0] }}">{{ car[1] }}{{ car[2] }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Driver Type:</label><br>
+    <input type="radio" id="non_junior" name="driver_type" value="non_junior">
+    <label for="non_junior">Non-Junior Driver (Age > 25 years)</label><br>
+
+    <input type="radio" id="junior_16_25" name="driver_type" value="junior_16_25">
+    <label for="junior_16_25">Junior Driver (16 years < Age <= 25 years)</label><br>
+
+    <input type="radio" id="junior_12_16" name="driver_type" value="junior_12_16">
+    <label for="junior_12_16">Junior Driver (12 years <= Age <= 16 years)</label><br><br>
+
+    
+    <input type="submit" value="Next Step">
+     
+         
+</form>
+
+</body>
+</html>
