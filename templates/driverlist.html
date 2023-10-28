@@ -13,7 +13,7 @@
     </thead>
     <tbody>
         {% for driver in driver_list %}
-        <tr {% if driver[5] and driver[5] <= 18 %}class="table-warning"{% endif %}>
+        <tr {% if driver[6] and driver[5] and driver[5] <= 25 and driver[5] >= 12 %}class="table-warning"{% endif %}>
             <!-- Make the driver name a clickable link -->
             <td><a href="/driverrundetail?driverid={{driver[0]}}">{{ driver[2] }} {{ driver[1] }}</a></td>
             <td>{{ driver[3] }}</td>

@@ -28,14 +28,14 @@ def getCursor():
 #define homebase_page
 @app.route("/")
 def home():
-    return render_template("base.html")
+    return render_template("home.html")
 
 #define method for passing data for List of drivers page
 @app.route("/listdrivers")
 def listdrivers():
     connection = getCursor()
     # Modify the SQL query to join driver and car tables and order by surname and first name
-    connection.execute("SELECT driver.driver_id, driver.first_name, driver.surname, car.model, car.drive_class, driver.age FROM driver JOIN car ON driver.car = car.car_num ORDER BY driver.surname, driver.first_name;")
+    connection.execute("SELECT driver.driver_id, driver.first_name, driver.surname, car.model, car.drive_class, driver.age,driver.date_of_birth FROM driver JOIN car ON driver.car = car.car_num ORDER BY driver.surname, driver.first_name;")
     driverList = connection.fetchall()
     return render_template("driverlist.html", driver_list = driverList)    
 
@@ -208,9 +208,28 @@ def showdriverrundetail():
     connection.execute("SELECT * FROM driver;")
     driverlist = connection.fetchall()
 
+    catchallsql = """SELECT 
+    d.driver_id AS "Driver ID",
+    CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
+    c.name AS "Course Name",
+    r.run_num AS "Run Num",
+    r.seconds AS "Time",
+    COALESCE(r.cones, 0) AS "Cones",
+    COALESCE(r.wd, 0) AS "WD",
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 2 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  
+FROM 
+    run r
+JOIN driver d ON r.dr_id = d.driver_id
+JOIN course c ON r.crs_id = c.course_id 
+ORDER BY d.driver_id, c.name, r.run_num;"""
+    connection.execute(catchallsql)
+    driverdetail = connection.fetchall()
+
+
     if request.method == 'GET':
         driverid = request.args.get('driverid')
-        sql = """SELECT 
+        if driverid:
+            sql = """SELECT 
     d.driver_id AS "Driver ID",
     CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
     c.name AS "Course Name",
@@ -224,9 +243,9 @@ FROM
 JOIN driver d ON r.dr_id = d.driver_id
 JOIN course c ON r.crs_id = c.course_id where d.driver_id = %s
 ORDER BY d.driver_id, c.name, r.run_num;""" 
-        connection.execute(sql, (driverid,))
-        driverdetail = connection.fetchall()
-        return render_template('driverrundetail.html', driverdetail=driverdetail, drivers_list=driverlist)
+            connection.execute(sql, (driverid,))
+            driverdetail = connection.fetchall()
+            return render_template('driverrundetail.html', driverdetail=driverdetail, drivers_list=driverlist)
 
     if request.method == 'POST':
         if 'reset' in request.form:
@@ -243,7 +262,7 @@ FROM
     run r
 JOIN driver d ON r.dr_id = d.driver_id
 JOIN course c ON r.crs_id = c.course_id 
-ORDER BY d.driver_id, c.name, r.run_num;""" # 这里应该是获取所有驾驶员的详细信息的SQL查询
+ORDER BY d.driver_id, c.name, r.run_num;""" # This should be an SQL query that gets the details of all drivers
             connection.execute(sql)
             driverdetail = connection.fetchall()
             return render_template('driverrundetail.html', driverdetail=driverdetail, drivers_list=driverlist)
@@ -262,12 +281,12 @@ FROM
     run r
 JOIN driver d ON r.dr_id = d.driver_id
 JOIN course c ON r.crs_id = c.course_id where d.driver_id = %s
-ORDER BY d.driver_id, c.name, r.run_num;"""# 保持原样
+ORDER BY d.driver_id, c.name, r.run_num;"""
             connection.execute(sql, (driverid,))
             driverdetail = connection.fetchall()
             return render_template('driverrundetail.html', driverdetail=driverdetail, drivers_list=driverlist)
 
-    return render_template('driverrundetail.html', drivers_list=driverlist)
+    return render_template('driverrundetail.html',driverdetail=driverdetail, drivers_list=driverlist)
 
 
 
@@ -380,7 +399,7 @@ def juniordrivers():
     SELECT driver.first_name, driver.surname, driver.age, caregiver.first_name AS caregiver_name
     FROM driver
     LEFT JOIN driver AS caregiver ON driver.caregiver = caregiver.driver_id
-    WHERE driver.age <= 18
+    WHERE driver.age <= 25 and driver.age >=12
     ORDER BY driver.age DESC, driver.surname;
     """
     connection.execute(query)
@@ -616,6 +635,17 @@ def finalize_driver():
     caregiver = request.form.get('caregiver')
     
 
+    # A date in string format is converted to a datetime object
+    specific_date = datetime.strptime(date_birth, '%Y-%m-%d') # type: ignore
+    current_date = datetime.now()
+
+    # Calculate the difference in the number of years between two dates
+    years_difference = current_date.year - specific_date.year
+
+    # If the current date is before the year of a particular date, subtract one year
+    if (current_date.month, current_date.day) < (specific_date.month, specific_date.day):
+                                                                                         years_difference -= 1
+
     if request.method == 'POST':
         if first_name and surname and car and driver_type == 'non_junior':
             sql = "INSERT INTO driver (first_name, surname,car) VALUES (%s, %s, %s)"
@@ -637,11 +667,10 @@ VALUES
 (@new_driver_id, 'F', 1, NULL, NULL, 0),
 (@new_driver_id, 'F', 2, NULL, NULL, 0);"""
             connection.execute(recordsql)
-
             return redirect(url_for('add_driver'))
         if first_name and surname and car and driver_type == 'junior_16_25' and date_birth:
-            sql = "INSERT INTO driver (first_name, surname,car,date_of_birth) VALUES (%s, %s, %s, %s)"
-            val = (first_name,surname,car,date_birth)
+            sql = "INSERT INTO driver (first_name, surname,car,date_of_birth,age) VALUES (%s, %s, %s, %s, %s)"
+            val = (first_name,surname,car,date_birth,years_difference)
             connection.execute(sql, val)
 
             recordsql = """SET @new_driver_id = LAST_INSERT_ID();INSERT INTO run (dr_id, crs_id, run_num, seconds, cones, wd) 
@@ -659,11 +688,10 @@ VALUES
 (@new_driver_id, 'F', 1, NULL, NULL, 0),
 (@new_driver_id, 'F', 2, NULL, NULL, 0);"""
             connection.execute(recordsql)
-
             return redirect(url_for('add_driver'))
         if first_name and surname and car and driver_type == 'junior_12_16' and date_birth and caregiver:
-            sql = "INSERT INTO driver (first_name, surname,car,date_of_birth,caregiver) VALUES (%s, %s, %s, %s, %s)"
-            val = (first_name,surname,car,date_birth,caregiver)
+            sql = "INSERT INTO driver (first_name, surname,car,date_of_birth,age,caregiver) VALUES (%s, %s, %s, %s, %s, %s)"
+            val = (first_name,surname,car,date_birth,years_difference,caregiver)
             connection.execute(sql, val)
 
             recordsql = """SET @new_driver_id = LAST_INSERT_ID();INSERT INTO run (dr_id, crs_id, run_num, seconds, cones, wd) 
@@ -681,7 +709,6 @@ VALUES
 (@new_driver_id, 'F', 1, NULL, NULL, 0),
 (@new_driver_id, 'F', 2, NULL, NULL, 0);"""
             connection.execute(recordsql)
-
             return redirect(url_for('add_driver'))
 
 

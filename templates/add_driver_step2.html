@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html>
+{% extends "adminmain.html" %}
+
+{% block content %}
 <head>
     <title>Add Driver - Step 2</title>
 </head>
@@ -17,8 +18,6 @@
 {% if driver_type == "non_junior" %}
 <h2>Add New Driver - Step 2</h2>
 {% endif %}
-
-
 
 
 <p>First Name: {{ first_name }}</p>
@@ -47,10 +46,10 @@
         </select><br><br>
     {% endif %}
 
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit">    
     <a href="/admin/add_driver">Go Back</a>
 </form>
 
 
 </body>
-</html>
+{% endblock %}
