@@ -128,17 +128,89 @@ ORDER BY CASE WHEN overall_result = 'NQ' THEN 1 ELSE 0 END, overall_result LIMIT
     
     return render_template("top5graph.html", name_list = bestDriverList, value_list = resultsList)
 
+# old version
+# #define method for passing data for Driver's run details
+# @app.route("/driverrundetail",methods=['GET', 'POST'])
+# def showdriverrundetail():
+#         connection = getCursor()
+#         # retrieve data from table driver for show in driverrundetail.html drop down widget
+#         connection.execute("SELECT * FROM driver;")
+#         driverlist = connection.fetchall()
 
-#define method for passing data for Driver's run details
+#         if request.method == 'GET':
+#             driverid = request.args.get('driverid')
+#             sql="""SELECT 
+#     d.driver_id AS "Driver ID",
+#     CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
+#     c.name AS "Course Name",
+#     r.run_num AS "Run Num",
+#     r.seconds AS "Time",
+#     COALESCE(r.cones, 0) AS "Cones",
+#     COALESCE(r.wd, 0) AS "WD",
+#     ROUND(r.seconds + COALESCE(r.cones, 0) * 2 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+# FROM 
+#     run r
+# JOIN driver d ON r.dr_id = d.driver_id
+# JOIN course c ON r.crs_id = c.course_id where d.driver_id = %s
+# ORDER BY d.driver_id, c.name, r.run_num;"""
+#              # retrieve data from table run,driver,course for show   driverdetail  in driverrundetail.html
+#             connection.execute(sql, (driverid,))
+#             driverdetail =  connection.fetchall()
+#             return render_template('driverrundetail.html', driverdetail=driverdetail,drivers_list=driverlist)
+
+    
+#         if request.method == 'POST':
+#             if 'Resets' in request.form:
+#                  sql = """SELECT 
+#     d.driver_id AS "Driver ID",
+#     CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
+#     c.name AS "Course Name",
+#     r.run_num AS "Run Num",
+#     r.seconds AS "Time",
+#     COALESCE(r.cones, 0) AS "Cones",
+#     COALESCE(r.wd, 0) AS "WD",
+#     ROUND(r.seconds + COALESCE(r.cones, 0) * 2 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+# FROM 
+#     run r
+# JOIN driver d ON r.dr_id = d.driver_id
+# JOIN course c ON r.crs_id = c.course_id where d.driver_id = %s
+# ORDER BY d.driver_id, c.name, r.run_num;"""
+#                  connection.execute(sql)
+#                  driverdetail = connection.fetchall()
+#                  return render_template('driverrundetail.html', drivers_list=driverlist,driverdetail=driverdetail) 
+#             else:           
+#                  driverid = request.form.get('driver')
+#                  sql="""SELECT 
+#     d.driver_id AS "Driver ID",
+#     CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
+#     c.name AS "Course Name",
+#     r.run_num AS "Run Num",
+#     r.seconds AS "Time",
+#     COALESCE(r.cones, 0) AS "Cones",
+#     COALESCE(r.wd, 0) AS "WD",
+#     ROUND(r.seconds + COALESCE(r.cones, 0) * 2 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+# FROM 
+#     run r
+# JOIN driver d ON r.dr_id = d.driver_id
+# JOIN course c ON r.crs_id = c.course_id where d.driver_id = %s
+# ORDER BY d.driver_id, c.name, r.run_num;"""
+#              # retrieve data from table run,driver,course for show   driverdetail  in driverrundetail.html
+#                  connection.execute(sql, (driverid,))
+#                  driverdetail =  connection.fetchall()
+#                  return render_template('driverrundetail.html', driverdetail=driverdetail,drivers_list=driverlist)
+
+#         return render_template('driverrundetail.html', drivers_list=driverlist)
+
+
 @app.route("/driverrundetail",methods=['GET', 'POST'])
 def showdriverrundetail():
-        connection = getCursor()
-        # retrieve data from table driver for show in driverrundetail.html drop down widget
-        connection.execute("SELECT * FROM driver;")
-        driverlist = connection.fetchall()
-        if request.method == 'POST':
-            driverid = request.form.get('driver')
-            sql="""SELECT 
+    connection = getCursor()
+    connection.execute("SELECT * FROM driver;")
+    driverlist = connection.fetchall()
+
+    if request.method == 'GET':
+        driverid = request.args.get('driverid')
+        sql = """SELECT 
     d.driver_id AS "Driver ID",
     CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
     c.name AS "Course Name",
@@ -151,13 +223,53 @@ FROM
     run r
 JOIN driver d ON r.dr_id = d.driver_id
 JOIN course c ON r.crs_id = c.course_id where d.driver_id = %s
-ORDER BY d.driver_id, c.name, r.run_num;"""
-             # retrieve data from table run,driver,course for show   driverdetail  in driverrundetail.html
-            connection.execute(sql, (driverid,))
-            driverdetail =  connection.fetchall()
-            return render_template('driverrundetail.html', driverdetail=driverdetail,drivers_list=driverlist)
+ORDER BY d.driver_id, c.name, r.run_num;""" 
+        connection.execute(sql, (driverid,))
+        driverdetail = connection.fetchall()
+        return render_template('driverrundetail.html', driverdetail=driverdetail, drivers_list=driverlist)
 
-        return render_template('driverrundetail.html', drivers_list=driverlist)
+    if request.method == 'POST':
+        if 'reset' in request.form:
+            sql = """SELECT 
+    d.driver_id AS "Driver ID",
+    CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
+    c.name AS "Course Name",
+    r.run_num AS "Run Num",
+    r.seconds AS "Time",
+    COALESCE(r.cones, 0) AS "Cones",
+    COALESCE(r.wd, 0) AS "WD",
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 2 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+FROM 
+    run r
+JOIN driver d ON r.dr_id = d.driver_id
+JOIN course c ON r.crs_id = c.course_id 
+ORDER BY d.driver_id, c.name, r.run_num;""" # 这里应该是获取所有驾驶员的详细信息的SQL查询
+            connection.execute(sql)
+            driverdetail = connection.fetchall()
+            return render_template('driverrundetail.html', driverdetail=driverdetail, drivers_list=driverlist)
+        else:
+            driverid = request.form.get('driver')
+            sql = """SELECT 
+    d.driver_id AS "Driver ID",
+    CONCAT(d.first_name, ' ', d.surname) AS "Driver Name",
+    c.name AS "Course Name",
+    r.run_num AS "Run Num",
+    r.seconds AS "Time",
+    COALESCE(r.cones, 0) AS "Cones",
+    COALESCE(r.wd, 0) AS "WD",
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 2 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+FROM 
+    run r
+JOIN driver d ON r.dr_id = d.driver_id
+JOIN course c ON r.crs_id = c.course_id where d.driver_id = %s
+ORDER BY d.driver_id, c.name, r.run_num;"""# 保持原样
+            connection.execute(sql, (driverid,))
+            driverdetail = connection.fetchall()
+            return render_template('driverrundetail.html', driverdetail=driverdetail, drivers_list=driverlist)
+
+    return render_template('driverrundetail.html', drivers_list=driverlist)
+
+
 
 
 
@@ -509,16 +621,67 @@ def finalize_driver():
             sql = "INSERT INTO driver (first_name, surname,car) VALUES (%s, %s, %s)"
             val = (first_name,surname,car)
             connection.execute(sql, val)
+
+            recordsql = """SET @new_driver_id = LAST_INSERT_ID();INSERT INTO run (dr_id, crs_id, run_num, seconds, cones, wd) 
+VALUES 
+(@new_driver_id, 'A', 1, NULL, NULL, 0),
+(@new_driver_id, 'A', 2, NULL, NULL, 0),
+(@new_driver_id, 'B', 1, NULL, NULL, 0),
+(@new_driver_id, 'B', 2, NULL, NULL, 0),
+(@new_driver_id, 'C', 1, NULL, NULL, 0),
+(@new_driver_id, 'C', 2, NULL, NULL, 0),
+(@new_driver_id, 'D', 1, NULL, NULL, 0),
+(@new_driver_id, 'D', 2, NULL, NULL, 0),
+(@new_driver_id, 'E', 1, NULL, NULL, 0),
+(@new_driver_id, 'E', 2, NULL, NULL, 0),
+(@new_driver_id, 'F', 1, NULL, NULL, 0),
+(@new_driver_id, 'F', 2, NULL, NULL, 0);"""
+            connection.execute(recordsql)
+
             return redirect(url_for('add_driver'))
         if first_name and surname and car and driver_type == 'junior_16_25' and date_birth:
             sql = "INSERT INTO driver (first_name, surname,car,date_of_birth) VALUES (%s, %s, %s, %s)"
             val = (first_name,surname,car,date_birth)
             connection.execute(sql, val)
+
+            recordsql = """SET @new_driver_id = LAST_INSERT_ID();INSERT INTO run (dr_id, crs_id, run_num, seconds, cones, wd) 
+VALUES 
+(@new_driver_id, 'A', 1, NULL, NULL, 0),
+(@new_driver_id, 'A', 2, NULL, NULL, 0),
+(@new_driver_id, 'B', 1, NULL, NULL, 0),
+(@new_driver_id, 'B', 2, NULL, NULL, 0),
+(@new_driver_id, 'C', 1, NULL, NULL, 0),
+(@new_driver_id, 'C', 2, NULL, NULL, 0),
+(@new_driver_id, 'D', 1, NULL, NULL, 0),
+(@new_driver_id, 'D', 2, NULL, NULL, 0),
+(@new_driver_id, 'E', 1, NULL, NULL, 0),
+(@new_driver_id, 'E', 2, NULL, NULL, 0),
+(@new_driver_id, 'F', 1, NULL, NULL, 0),
+(@new_driver_id, 'F', 2, NULL, NULL, 0);"""
+            connection.execute(recordsql)
+
             return redirect(url_for('add_driver'))
         if first_name and surname and car and driver_type == 'junior_12_16' and date_birth and caregiver:
             sql = "INSERT INTO driver (first_name, surname,car,date_of_birth,caregiver) VALUES (%s, %s, %s, %s, %s)"
             val = (first_name,surname,car,date_birth,caregiver)
             connection.execute(sql, val)
+
+            recordsql = """SET @new_driver_id = LAST_INSERT_ID();INSERT INTO run (dr_id, crs_id, run_num, seconds, cones, wd) 
+VALUES 
+(@new_driver_id, 'A', 1, NULL, NULL, 0),
+(@new_driver_id, 'A', 2, NULL, NULL, 0),
+(@new_driver_id, 'B', 1, NULL, NULL, 0),
+(@new_driver_id, 'B', 2, NULL, NULL, 0),
+(@new_driver_id, 'C', 1, NULL, NULL, 0),
+(@new_driver_id, 'C', 2, NULL, NULL, 0),
+(@new_driver_id, 'D', 1, NULL, NULL, 0),
+(@new_driver_id, 'D', 2, NULL, NULL, 0),
+(@new_driver_id, 'E', 1, NULL, NULL, 0),
+(@new_driver_id, 'E', 2, NULL, NULL, 0),
+(@new_driver_id, 'F', 1, NULL, NULL, 0),
+(@new_driver_id, 'F', 2, NULL, NULL, 0);"""
+            connection.execute(recordsql)
+
             return redirect(url_for('add_driver'))
 
 
