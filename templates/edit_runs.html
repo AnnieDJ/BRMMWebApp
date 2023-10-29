@@ -57,7 +57,7 @@
                         <td><input type="text" name="time" value="{{ run[5] }}"></td>
                         <td>
                             <select name="cones">
-                                {% for i in range(21) %}
+                                {% for i in range(26) %}
                                     <option value="{{ i }}" {% if i == run[6] %}selected{% endif %}>{{ i }}</option>
                                 {% endfor %}
                             </select>
