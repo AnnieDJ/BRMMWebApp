@@ -9,7 +9,7 @@ Your report must be created using GitHub Markdown format and saved in the `READM
 
 - **Outline of the Structure:** 
     - Outline the structure of your solution (routes & functions, and templates). This should be brief and can be text-based or a diagram (as an image).
-    -`[My Answer]:`![WebsiteRoute](https://github.com/AnnieDJ/image-in-readme/assets/146434944/a83fd5b7-8042-461b-a2a3-fa6ba47c8ca6)
+    -`[My Answer]:`![Websites_route](https://github.com/AnnieDJ/image-in-readme/assets/146434944/8370d267-5c1c-402e-a346-afb46aeefb43)
 
 ## Assumptions and Design Decisions
 
@@ -19,7 +19,11 @@ Your report must be created using GitHub Markdown format and saved in the `READM
 design options you weighed up, why you designed your app the way that you did, your 
 decisions about the routes, templates, navigation, broad layout, etc, that you made).
     - `[My Answer]:`
-I want to create links on the home page to List of courses, Driver’s run details, List of drivers, Overall results, and Bar graph. Additionally, there is an Admin link that, when clicked, leads to the AdminHome page. In this page, there are four links: Junior driver list, Driver search, Edit runs, and Add driver, which correspond to the functions for the Admin.In my web application, I handle SQL-related logic in app.py, which includes adding a driver, querying driver data, fetching driver details, querying Junior Drivers, retrieving the Course List, obtaining overall results, and modifying run records. The templates folder stores various Jinja web templates used to display database-related fields, and CSS is applied when necessary to style the elements. During development, I considered that some web pages support both POST and GET requests, so I handled them separately. In certain cases, there are multiple dropdown menus, resulting in multiple parameters sent to app.py, which are distinguished by their names. Some web pages involve multiple steps, such as the Add Driver page, where data needs to be passed between pages. In some SQL queries, I utilized special functions like Common Table Expression, Case, and COALESCE for data retrieval.In the standard pages (List of courses, Driver’s run details, List of drivers, Overall results, and Bar graph), I reused the base.html template. In the Admin pages (Junior driver list, Driver search, Edit runs, and Add driver), I utilized the adminmain.html template.
+- I'd like to create links on the home page to "List of courses," "Driver's run details," "List of drivers," "Overall results," and "Bar graph." Additionally, there should be an "Admin" link. When you click on the "Admin" link, it should take you to the "AdminHome" page. On this page, you'll find links to four main functions for the admin: "Junior driver list," "Driver search," "Edit runs," and "Add driver."
+
+- In my web application (App), I handle SQL-related logic in app.py. This includes adding drivers, querying driver data, retrieving driver details, fetching data on junior drivers, getting the list of courses, fetching overall results, and modifying run records. In the "templates" folder, I store various Jinja web templates used to display database-related fields. When necessary, I use CSS to style the components. When writing the code, I consider that some web pages have both POST and GET requests, so I handle them separately. Sometimes, there are multiple dropdowns, so I pass multiple parameters to app.py and identify them by name. In some web pages with multiple steps, such as the "Add driver" page, there is a need to pass data between web pages. In some SQL queries, I utilize special functions like Common Table Expressions, Case, COALESCE, etc.
+
+- In the regular user interfaces (corresponding to "List of courses," "Driver's run details," "List of drivers," "Overall results," and "Bar graph"), I reuse the "base.html" template. However, in the admin interface (corresponding to "Junior driver list," "Driver search," "Edit runs," and "Add driver"), I don't reuse the "adminmain" template. This is because in the admin interface, clicking the "Home" button returns to the website's main page. In contrast, in the pages for "Junior driver list," "Driver search," "Edit runs," and "Add driver," clicking the "Home" button takes you back to the Admin homepage.
     
 ## Database Questions
 

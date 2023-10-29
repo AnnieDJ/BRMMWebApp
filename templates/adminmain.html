@@ -13,10 +13,10 @@
       {{ testvar }}
         
             <h1>Bankside Rakaia Motorkhana Mavens - Admin Page</h1>
-            <h2>This page is for admin Only</h2>
+            <h2 style="color: blue;">This page is for admin Only</h2>
             <table class="table">
               <tr>
-                <td><a href="{{ url_for('showadminmain') }}">Home</a></td>
+                <td><a href="{{ url_for('home') }}">Home</a></td>
                 <td><a href="{{ url_for('juniordrivers') }}">Junior driver list</a></td>
                 <td><a href="{{ url_for('searchdrivers') }}">Driver search</a></td>
                 <td><a href="{{ url_for('edit_runs') }}">Edit runs</a></td>

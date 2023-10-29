@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Select a Driver</h2>
+<h2 style="color: blue;">Driver's run detail</h2>
 
-<form action="/driverrundetail" method="post"> <!-- Replace '/your_target_route' with the route where you want to send the selected driver's information -->
+<form action="/driverrundetail" method="post"> 
     <label for="driver">Choose a driver:</label>
     <select name="driver" id="driver">
         {% for driver in drivers_list %}
