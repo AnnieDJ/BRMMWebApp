@@ -91,8 +91,8 @@ def showgraph():
 ),
 OverallResults AS (
     SELECT driver_id,
-           CASE WHEN age <= 18 THEN CONCAT(first_name, ' (J)') ELSE first_name END AS first_name,
-           surname,
+            first_name,
+           CASE WHEN age <= 25  and age >=12 THEN CONCAT(surname, ' (J)') ELSE surname END AS surname,
            model,
            course_A_time,
            course_B_time,
@@ -237,7 +237,7 @@ ORDER BY d.driver_id, c.name, r.run_num;"""
     r.seconds AS "Time",
     COALESCE(r.cones, 0) AS "Cones",
     COALESCE(r.wd, 0) AS "WD",
-    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 5 seconds and WD adds 10 seconds
 FROM 
     run r
 JOIN driver d ON r.dr_id = d.driver_id
@@ -257,7 +257,7 @@ ORDER BY d.driver_id, c.name, r.run_num;"""
     r.seconds AS "Time",
     COALESCE(r.cones, 0) AS "Cones",
     COALESCE(r.wd, 0) AS "WD",
-    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 5 seconds and WD adds 10 seconds
 FROM 
     run r
 JOIN driver d ON r.dr_id = d.driver_id
@@ -276,7 +276,7 @@ ORDER BY d.driver_id, c.name, r.run_num;""" # This should be an SQL query that g
     r.seconds AS "Time",
     COALESCE(r.cones, 0) AS "Cones",
     COALESCE(r.wd, 0) AS "WD",
-    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 5 seconds and WD adds 10 seconds
 FROM 
     run r
 JOIN driver d ON r.dr_id = d.driver_id
@@ -337,8 +337,8 @@ def showoverallresult():
 ),
 OverallResults AS (
     SELECT driver_id,
-           CASE WHEN age <= 18 THEN CONCAT(first_name, ' (J)') ELSE first_name END AS first_name,
-           surname,
+           first_name,
+           CASE WHEN age <= 25  and age >=12 THEN CONCAT(surname, ' (J)') ELSE surname END AS surname,
            model,
            course_A_time,
            course_B_time,
@@ -482,7 +482,7 @@ SELECT
     r.seconds AS "Time",
     COALESCE(r.cones, 0) AS "Cones",
     COALESCE(r.wd, 0) AS "WD",
-    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 5 seconds and WD adds 10 seconds
 FROM 
     run r 
 JOIN driver d ON r.dr_id = d.driver_id
@@ -518,7 +518,7 @@ ORDER BY d.driver_id, c.name, r.run_num;
     r.seconds AS "Time",
     COALESCE(r.cones, 0) AS "Cones",
     COALESCE(r.wd, 0) AS "WD",
-    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 5 seconds and WD adds 10 seconds
 FROM run r 
 JOIN driver d ON r.dr_id = d.driver_id
 JOIN course c ON r.crs_id = c.course_id
@@ -551,7 +551,7 @@ ORDER BY d.driver_id, c.name, r.run_num;""", (course_id,))
     r.seconds AS "Time",
     COALESCE(r.cones, 0) AS "Cones",
     COALESCE(r.wd, 0) AS "WD",
-    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 5 seconds and WD adds 10 seconds
 FROM 
     run r
 JOIN driver d ON r.dr_id = d.driver_id
@@ -571,7 +571,7 @@ ORDER BY d.driver_id, c.name, r.run_num;
     r.seconds AS "Time",
     COALESCE(r.cones, 0) AS "Cones",
     COALESCE(r.wd, 0) AS "WD",
-    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 2 seconds and WD adds 10 seconds
+    ROUND(r.seconds + COALESCE(r.cones, 0) * 5 + COALESCE(r.wd, 0) * 10,2) AS "Run Total"  -- Assuming each cone adds 5 seconds and WD adds 10 seconds
 FROM 
     run r
 JOIN driver d ON r.dr_id = d.driver_id
